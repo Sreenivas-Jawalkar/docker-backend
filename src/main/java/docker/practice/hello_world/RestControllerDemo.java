@@ -14,7 +14,7 @@ public class RestControllerDemo {
     private String Tname;
     @GetMapping("/")
     public String helloWorld(){
-        return Cname + " Hello World Sree";
+        return Cname + " Hello World Sree ";
     }
     @GetMapping("data")
     public String mydum(){
