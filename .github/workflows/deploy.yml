@@ -1,4 +1,4 @@
-name: Deploy Java Backend
+name: Deploy Java Backend (Docker + EB)
 
 on:
   push:
@@ -6,46 +6,92 @@ on:
       - master
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
-
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+        uses: actions/checkout@v3
 
       - name: Login to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t sreenivasjawalkar/java-backend -f Dockerfile .
+        run: docker build -t sreenivasjawalkar/java-backend .
 
-      # - name: Run Tests Inside Container
-      #   run: docker run --rm sreenivasjawalkar/java-backend mvn test
-      - name: Run Unit Tests
-        run: mvn test
+      - name: Push Docker Image
+        run: docker push sreenivasjawalkar/java-backend
 
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
+      - name: Create deployment package
+        run: zip -r deploy.zip Dockerrun.aws.json
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: java-backend              # Your EB application name
-          environment_name: Java-backend-env               # Your EB environment name
-          existing_bucket_name: elasticbeanstalk-ap-south-1-576607007973  # Your EB S3 bucket
+          application_name: java-backend
+          environment_name: Java-backend-env
+          existing_bucket_name: elasticbeanstalk-ap-south-1-576607007973
           region: ap-south-1
-          version_label: ${{ github.sha }} 
-          deployment_package: deploy.zip 
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
+
+
+
+# name: Deploy Java Backend
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v2
+
+
+#       - name: Set up JDK 21
+#         uses: actions/setup-java@v4
+#         with:
+#           distribution: 'temurin'
+#           java-version: '21'
+
+#       - name: Login to Docker Hub
+#         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Build Docker Image
+#         run: docker build -t sreenivasjawalkar/java-backend -f Dockerfile .
+
+#       # - name: Run Tests Inside Container
+#       #   run: docker run --rm sreenivasjawalkar/java-backend mvn test
+#       - name: Run Unit Tests
+#         run: mvn test
+
+#       - name: Generate deployment package
+#         run: zip -r deploy.zip . -x '*.git*'
+
+#       - name: Deploy to Elastic Beanstalk
+#         uses: einaregilsson/beanstalk-deploy@v22
+#         with:
+#           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           application_name: java-backend              # Your EB application name
+#           environment_name: Java-backend-env               # Your EB environment name
+#           existing_bucket_name: elasticbeanstalk-ap-south-1-576607007973  # Your EB S3 bucket
+#           region: ap-south-1
+#           version_label: ${{ github.sha }} 
+#           deployment_package: deploy.zip 
           
+
+
+
+
+
         # env:
         #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
