@@ -1,7 +1,7 @@
 {
-  "AWSEBDockerrunVersion": 1,
+  "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "sreenivasjawalkar/java-backend",
+    "Name": "sreenivasjawalkar/java-backend:latest",
     "Update": "true"
   },
   "Ports": [
