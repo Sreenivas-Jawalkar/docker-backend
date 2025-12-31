@@ -4,6 +4,16 @@ COPY . .
 EXPOSE 8080
 CMD ["mvn", "spring-boot:run"]
 
+
+#31 december 2025
+# FROM maven:3.9.6-eclipse-temurin-21 AS build
+# WORKDIR /home/app
+# COPY target/*.jar app.jar
+# EXPOSE 8080
+# ENTRYPOINT ["java","-jar","app.jar"]
+
+
+
 # FROM maven:3.9.6-eclipse-temurin-21 AS build
 # WORKDIR /home/app
 # COPY pom.xml ./
