@@ -34,8 +34,8 @@ jobs:
           environment_name: Java-backend-env               # Your EB environment name
           existing_bucket_name: elasticbeanstalk-ap-south-1-576607007973  # Your EB S3 bucket
           region: ap-south-1
-          version_label: ${{ github.sha }}
-          deployment_package: deploy.zip
+          version_label: ${{ github.sha }} 
+          deployment_package: deploy.zip 
           
         # env:
         #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
