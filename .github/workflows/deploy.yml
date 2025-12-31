@@ -23,7 +23,7 @@ jobs:
         run: docker push sreenivasjawalkar/java-backend
 
       - name: Create deployment package
-        run: zip -r deploy.zip Dockerrun.aws.json
+        run: zip deploy.zip Dockerrun.aws.json
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
