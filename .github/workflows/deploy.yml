@@ -17,7 +17,7 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker Image
-        run: docker build -t sreenivasjawalkar/java-backend -f Dockerfile .
+        run: docker build -t sreenivasjawalkar/java-backend -f Dockerfile.dev .
 
       - name: Run Tests Inside Container
         run: docker run --rm sreenivasjawalkar/java-backend mvn test
